@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item </title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <style>
+        .card { 
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .card-body {
+            padding: 2em;
+        }
+
+        .card-img-top{
+            display: inline; 
+            max-width: 15rem; 
+            height: 250px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="list" class="p-5">
+
+        <!-- Courses Section -->
+         <div class="row mt-1">
+            <h1 class="my-3 text-center">Courses</h1>
+            <div class="col-lg-3 col-md-6 col-sm-12 card-group" v-for="item in items">
+
+                <div class="card mb-3 bg-dark text-light" >
+                    
+                        
+                        <div class="row">
+                            <div class="card-body">
+                                <h5 class="card-title" style="font-weight: bolder;">{{ item.subject }}</h5>
+                                <p class="">{{ item.description }}</p>
+                                <p><span style="font-size:large ;"
+                                        :class="item.stock > 5 ? 'text-success' : 'text-danger' ">{{ item.stock }}</span>
+                                    spaces left!</p>
+    
+                                    
+                                <hr>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="card-text text-success" style="font-weight: bold; font-size: large;">
+                                            &pound;{{
+                                            item.price }}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="card-text" style="font-weight:bold; float:right ;"><i
+                                                class="bi bi-geo-alt"></i> <em class="">{{ item.location }}</em> </p>
+                                    </div>
+                                </div>
+    
+    
+                            </div>
+                        </div>
+                    
+                </div>
+    
+            </div>
+    
+         </div>
+        
+
+    </div>
+
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+   
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+    <script>
+
+        const { createApp } = Vue
+       
+
+        createApp({
+            mounted() {
+                
+               this.getData();
+            },
+            
+            data() {
+                return {
+                    items: [],  
+                }
+            },
+            methods: {
+                async getData() {
+                    fetch("http://localhost:3000/Courses/Lessons")
+                    .then(response => response.json())
+                    .then(data => (this.items = data));
+                },
+            }
+        }).mount('#list')
+    </script>
+
+</body>
+
+</html>
