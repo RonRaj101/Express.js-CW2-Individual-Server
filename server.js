@@ -31,7 +31,7 @@ req.collection = db.collection(collectionName);
 return next();
 });
 
-app.get('/Courses/:Lessons', (req, res,next) => {
+app.get('/:Lessons', (req, res,next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Credentials", true);
 
