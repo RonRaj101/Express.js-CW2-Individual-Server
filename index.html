@@ -103,7 +103,7 @@
             },
             methods: {
                 async getData() {
-                    fetch("http://localhost:3000/Lessons")
+                    fetch("https://lessons-cw2.herokuapp.com/Lessons")
                     .then(response => response.json())
                     .then(data => (this.items = data));
                 },
