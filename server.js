@@ -60,4 +60,4 @@ app.get('/user', (req, res) => {
     res.send( "<a href='/lessons'>See Lessons</a> <br>" + "Email: " + user[0].Email + " <br> Password: " + user[0].Password);
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
