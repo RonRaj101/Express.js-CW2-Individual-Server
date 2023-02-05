@@ -57,21 +57,35 @@ app.post('/createOrder', (req, res, next) => {
     const items = req.body.cart;
 
     let collection = db.collection('Orders');
-    items.forEach(item => {
-        const product_id = item._id;
-        const quantity = item.quantity;
-        collection.insertOne({   
-                name: name, 
-                phone: phone, 
-                product_id:product_id,
-                quantity:quantity
-            }, (err, results) => {
-            if (err) {
-                return next(err);
-            }
-            res.send(results.ops);
-        });
+    const product_id = item._id;
+    const quantity = item.quantity;
+
+    const createdOrder = collection.insertOne({   
+        name: name, 
+        phone: phone, 
+        product_id:product_id,
+        quantity:quantity
     });
+
+    res.json(createdOrder);
+
+    console.log(createdOrder);
+    
+    // items.forEach(item => {
+    //     const product_id = item._id;
+    //     const quantity = item.quantity;
+    //     collection.insertOne({   
+    //             name: name, 
+    //             phone: phone, 
+    //             product_id:product_id,
+    //             quantity:quantity
+    //         }, (err, results) => {
+    //         if (err) {
+    //             return next(err);
+    //         }
+    //         res.send(results.ops);
+    //     });
+    // });
 });
 
 app.get('/user', (req, res) => {
