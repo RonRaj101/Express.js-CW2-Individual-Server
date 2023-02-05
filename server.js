@@ -49,7 +49,8 @@ app.get('/:Lessons', (req, res,next) => {
 
 //save a new order to the database
 app.param('createOrder', (req, res, next,collectionName) => {
-    console.log(db.collection(collectionName));
+    req.collection = db.collection(collectionName);
+    return next();
 });
 
 app.post('/:createOrder', (req, res,next) => {
@@ -62,8 +63,6 @@ app.post('/:createOrder', (req, res,next) => {
         }
         res.send(results);
     });
-   
-    
 });
 
 app.get('/user', (req, res) => {
