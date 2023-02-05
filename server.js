@@ -46,8 +46,8 @@ app.get('/:Lessons', (req, res,next) => {
 });
 
 //save a new order to the database
-app.post('/createOrder', (req, res, next) => {
-    console.log(req.body);
+app.post('/createOrder', (req, res, next,collectionName) => {
+    console.log(db.collection(collectionName));
 });
 
 app.get('/user', (req, res) => {
