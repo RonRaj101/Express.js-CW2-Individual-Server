@@ -48,20 +48,18 @@ app.get('/:Lessons', (req, res,next) => {
 
 
 //save a new order to the database
-app.param('createOrder', (req, res, next,collectionName) => {
-    req.collection = db.collection(collectionName);
-    return next();
-});
-
-app.post('/:createOrder', (req, res,next) => {
+app.post('/createOrder', (req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Credentials", true);
 
-    req.collection.find({}).toArray(function(err, results) {
+    const name = req.body.name;
+    const phone = req.body.phone;   
+
+    req.collection.insert({name: name, phone: phone}, (err, results) => {
         if (err) {
             return next(err);
         }
-        res.send(results);
+        res.send(results.ops);
     });
 });
 
