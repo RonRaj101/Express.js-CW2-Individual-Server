@@ -65,4 +65,9 @@ app.get('/user', (req, res) => {
     res.send( "<a href='/Lessons'>See Lessons</a> <br>" + "Email: " + user[0].Email + " <br> Password: " + user[0].Password);
 });
 
+//create 404 error for undefined routes
+app.use('*',function(req, res, next) {
+    res.status(404).send("Sorry can't find that!");
+});
+
 app.listen(process.env.PORT || 3000);
