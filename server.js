@@ -23,7 +23,7 @@ let cors = require('cors');
 
 
 app.get('/', (req, res) => {
-    res.send('<a href="/lessons">See Lessons</a> <br> <a href="/user">See User</a>');
+    res.send('<a href="/Lessons">See Lessons</a> <br> <a href="/user">See User</a>');
 });
 
 app.param('Lessons', function(req, res, next, collectionName) {
