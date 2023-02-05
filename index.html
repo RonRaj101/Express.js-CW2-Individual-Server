@@ -95,19 +95,20 @@
           <!-- Checkout Section -->
           <div class="row mt-5">
 
-            <h1 style="text-align: center;">Check Out</h1>
+            <h1 style="text-align: center;">Check Out ({{ cartCount }})</h1>
 
             <div class="row">
             <form action="/createOrder" method="post">
                 <div class="col">
-                  <input type="text" v-model="CO_name" name="name" class="form-control" placeholder="Full Name" aria-label="Full name">
+                  <input type="text" name="name" class="form-control" placeholder="Full Name" aria-label="Full name">
                 </div>
                 <div class="col">
-                  <input type="number" v-model="CO_phone" name="phone" class="form-control" placeholder="Phone Number" aria-label="Number">
+                  <input type="number" name="phone" class="form-control" placeholder="Phone Number" aria-label="Number">
                 </div>
+                <input type="hidden" name="cart" :value="this.cart">
                 <button class="btn btn-dark col" type="submit">Confirm Order</button>
             </form>
-              </div>
+            </div>
               
          </div>
     </div>
@@ -131,9 +132,9 @@
                 this.getData();
 
                 this.cart = [...this.items];
-                this.cart.forEach(element => {
-                    element['quantity'] = null;
-                });
+                    for(const element of this.cart) {
+                        element.quantity = 0;
+                }
             },
             
             data() {
@@ -143,7 +144,7 @@
                 }
             },
             methods: {
-                async getData() {
+                getData() {
                     fetch("https://lessons-cw2.herokuapp.com/Lessons")
                     .then(response => response.json())
                     .then(data => (this.items = data));

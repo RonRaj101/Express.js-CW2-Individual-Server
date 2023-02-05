@@ -54,12 +54,18 @@ app.post('/createOrder', (req, res, next) => {
 
     const name = req.body.name;
     const phone = req.body.phone;   
+    const items = req.body.cart;
 
-    req.collection.insert({name: name, phone: phone}, (err, results) => {
-        if (err) {
-            return next(err);
-        }
-        res.send(results.ops);
+    let collection = db.collection('Orders');
+    items.forEach(item => {
+        const product_id = item._id;
+        const quantity = item.quantity;
+        collection.insert({name: name, phone: phone, product_id:product_id, quantity:quantity }, (err, results) => {
+            if (err) {
+                return next(err);
+            }
+            res.send(results.ops);
+        });
     });
 });
 
