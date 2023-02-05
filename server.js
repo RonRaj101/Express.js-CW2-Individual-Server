@@ -67,9 +67,9 @@ app.post('/createOrder', (req, res, next) => {
         quantity:quantity
     };
 
-    collection.insertOne(createdOrder, (err, result) => {
+    collection.insertOne(req.body, (err, result) => {
         try {
-            res.send(result);
+            res.send(createdOrder);
         } 
         catch (error) {
             res.send(err);
