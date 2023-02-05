@@ -45,9 +45,25 @@ app.get('/:Lessons', (req, res,next) => {
     
 });
 
+
+
 //save a new order to the database
-app.param('/createOrder', (req, res, next,collectionName) => {
+app.param('createOrder', (req, res, next,collectionName) => {
     console.log(db.collection(collectionName));
+});
+
+app.post('/:createOrder', (req, res,next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Credentials", true);
+
+    req.collection.find({}).toArray(function(err, results) {
+        if (err) {
+            return next(err);
+        }
+        res.send(results);
+    });
+   
+    
 });
 
 app.get('/user', (req, res) => {
