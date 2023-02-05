@@ -60,7 +60,12 @@ app.post('/createOrder', (req, res, next) => {
     items.forEach(item => {
         const product_id = item._id;
         const quantity = item.quantity;
-        collection.insert({name: name, phone: phone, product_id:product_id, quantity:quantity }, (err, results) => {
+        collection.insertOne({   
+                name: name, 
+                phone: phone, 
+                product_id:product_id,
+                quantity:quantity
+            }, (err, results) => {
             if (err) {
                 return next(err);
             }

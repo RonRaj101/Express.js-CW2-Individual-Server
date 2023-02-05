@@ -34,24 +34,6 @@
     <div id="list" class="p-5">
 
         <form  style="position: fixed; top: 0; left: 0; z-index: 1000; border:2px dotted white;" class="d-inline-flex container-fluid bg-dark text-light p-3 mb-5">
-            <select v-model="filterValue"  class="form-select" aria-label="Filter By">
-                <option disabled selected>Filter By</option>
-                <option value="subject" selected>Subject</option>
-                <option value="location">Location</option>
-                <option value="price">Price</option>
-                <option value="stock">Spaces Available</option>
-              </select>
-
-            <div class="form-check">
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" v-model="checkBox" type="radio" name="inlineRadioOptions" id="asc-radio" value="asc" checked>
-                <label class="form-check-label" for="inlineRadio1">Ascending</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" v-model="checkBox"  type="radio" name="inlineRadioOptions" id="desc-radio" value="desc" >
-                <label class="form-check-label" for="inlineRadio2">Descending</label>
-              </div>
-            </div>
             <input class="form-control me-2" v-model="searchQuery" type="search" placeholder="Search..." aria-label="Search">
           </form>
 
@@ -72,7 +54,7 @@
                                         :class="item.stock > 5 ? 'text-success' : 'text-danger' ">{{ item.stock }}</span>
                                     spaces left!</p>
     
-                                    <button @click="addToCart(item.subject)" :disabled="item.stock <= 0" class="btn btn-outline-light">Add To Cart </button>
+                                    <button @click="addToCart(item._id)" :disabled="item.stock <= 0" class="btn btn-outline-light">Add To Cart </button>
                                 <hr>
                                 <div class="row">
                                     <div class="col-6">
@@ -130,69 +112,68 @@
         createApp({
             mounted() {
                 this.getData();
-
-                this.cart = [...this.items];
-                    for(const element of this.cart) {
-                        element.quantity = 0;
-                }
+            
+                this.cart.forEach(element => {
+                    element.quantity = 0;
+                });
             },
             
             data() {
                 return {
                     items: [],  
                     cart:[],
+                    searchQuery:''
                 }
             },
             methods: {
                 getData() {
                     fetch("https://lessons-cw2.herokuapp.com/Lessons")
                     .then(response => response.json())
-                    .then(data => (this.items = data));
-                },
-                addToCart(subject){
-
+                    .then(data => {
+                        this.items = data;
+                        this.cart = data;
+                    });
+                },  
+                addToCart(_id){
                     //find entire object and push to cart array
-                    let result = this.items.findIndex((obj => obj.subject == subject));
+                    let result = this.items.findIndex((obj => obj._id == _id));
                     this.items[result].stock--; 
 
                     //increment the quantity
-                    let cartItem = this.cart.findIndex((obj => obj.subject == subject));
+                    let cartItem = this.cart.findIndex((obj => obj._id == _id));
                     this.cart[cartItem].quantity++;
 
+                    //remove proxy of this array
+                    console.log([...this.cart]);
+                },
 
-                    console.log(this.cart[cartItem].quantity);
-                    },
-
-                    //method for changing items in cart (+ or - quantity)
+                //method for changing items in cart (+ or - quantity)
                 modifyCart(subject, operation){
                     let result = this.items.findIndex((obj => obj.subject == subject));
                     let cartItem = this.cart.findIndex((obj => obj.subject == subject));
 
                     if(operation == "+"){
-
                         //decrease stock   
                         this.items[result].stock--; 
 
                         //increment the quantity
                         this.cart[cartItem].quantity++;
-
                     }
 
                     else if(operation == "-"){
-
                         //decrease stock 
                         this.items[result].stock++; 
 
                         //increment the quantity
                         this.cart[cartItem].quantity--;
-
                     }
                 },
             },
             computed:{
                 cartCount(){
                     return this.cart.filter(obj => obj.quantity > 0).length;
-                }
+                },
+                
             }
         }).mount('#list')
     </script>
