@@ -57,8 +57,8 @@ app.post('/createOrder', async(req, res, next) => {
     const items = req.body.cart;
 
     let collection = db.collection('Orders');
-    const product_id = item._id;
-    const quantity = item.quantity;
+    const product_id = '63d6d17c9c9f8e53ce756281' //item._id;
+    const quantity = 2; //item.quantity;
 
     const newListing = { name: name, phone: phone, product_id:product_id, quantity:quantity };
 
