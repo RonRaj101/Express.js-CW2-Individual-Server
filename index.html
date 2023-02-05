@@ -33,12 +33,35 @@
 
     <div id="list" class="p-5">
 
+        <form  style="position: fixed; top: 0; left: 0; z-index: 1000; border:2px dotted white;" class="d-inline-flex container-fluid bg-dark text-light p-3 mb-5">
+            <select v-model="filterValue"  class="form-select" aria-label="Filter By">
+                <option disabled selected>Filter By</option>
+                <option value="subject" selected>Subject</option>
+                <option value="location">Location</option>
+                <option value="price">Price</option>
+                <option value="stock">Spaces Available</option>
+              </select>
+
+            <div class="form-check">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" v-model="checkBox" type="radio" name="inlineRadioOptions" id="asc-radio" value="asc" checked>
+                <label class="form-check-label" for="inlineRadio1">Ascending</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" v-model="checkBox"  type="radio" name="inlineRadioOptions" id="desc-radio" value="desc" >
+                <label class="form-check-label" for="inlineRadio2">Descending</label>
+              </div>
+            </div>
+            <input class="form-control me-2" v-model="searchQuery" type="search" placeholder="Search..." aria-label="Search">
+          </form>
+
+
         <!-- Courses Section -->
-         <div class="row mt-1">
-            <h1 class="my-3 text-center">Courses</h1>
+         <div class="row mt-5">
+           
             <div class="col-lg-3 col-md-6 col-sm-12 card-group" v-for="item in items">
 
-                <div class="card mb-3 bg-dark text-light" >
+                 <div class="card mb-3 bg-dark text-light" >
                     
                         
                         <div class="row">
@@ -49,7 +72,7 @@
                                         :class="item.stock > 5 ? 'text-success' : 'text-danger' ">{{ item.stock }}</span>
                                     spaces left!</p>
     
-                                    
+                                    <button @click="addToCart(item.subject)" :disabled="item.stock <= 0" class="btn btn-outline-light">Add To Cart </button>
                                 <hr>
                                 <div class="row">
                                     <div class="col-6">
@@ -58,22 +81,35 @@
                                             item.price }}</p>
                                     </div>
                                     <div class="col-6">
-                                        <p class="card-text" style="font-weight:bold; float:right ;"><i
-                                                class="bi bi-geo-alt"></i> <em class="">{{ item.location }}</em> </p>
+                                        <p class="card-text" style="font-weight:bold; float:right ;">
+                                            <i class="bi bi-geo-alt"></i> <em class="">{{ item.location }}</em> 
+                                        </p>
                                     </div>
                                 </div>
-    
-    
                             </div>
-                        </div>
-                    
+                        </div>    
                 </div>
-    
             </div>
-    
          </div>
-        
 
+          <!-- Checkout Section -->
+          <div class="row mt-5">
+
+            <h1 style="text-align: center;">Check Out</h1>
+
+            <div class="row">
+            <form action="/createOrder" method="post">
+                <div class="col">
+                  <input type="text" v-model="CO_name" name="name" class="form-control" placeholder="Full Name" aria-label="Full name">
+                </div>
+                <div class="col">
+                  <input type="number" v-model="CO_phone" name="phone" class="form-control" placeholder="Phone Number" aria-label="Number">
+                </div>
+                <button class="btn btn-dark col" type="submit">Confirm Order</button>
+            </form>
+              </div>
+              
+         </div>
     </div>
 
 
@@ -92,13 +128,18 @@
 
         createApp({
             mounted() {
-                
-               this.getData();
+                this.getData();
+
+                this.cart = [...this.items];
+                this.cart.forEach(element => {
+                    element['quantity'] = null;
+                });
             },
             
             data() {
                 return {
                     items: [],  
+                    cart:[],
                 }
             },
             methods: {
@@ -107,6 +148,50 @@
                     .then(response => response.json())
                     .then(data => (this.items = data));
                 },
+                addToCart(subject){
+
+                    //find entire object and push to cart array
+                    let result = this.items.findIndex((obj => obj.subject == subject));
+                    this.items[result].stock--; 
+
+                    //increment the quantity
+                    let cartItem = this.cart.findIndex((obj => obj.subject == subject));
+                    this.cart[cartItem].quantity++;
+
+
+                    console.log(this.cart[cartItem].quantity);
+                    },
+
+                    //method for changing items in cart (+ or - quantity)
+                modifyCart(subject, operation){
+                    let result = this.items.findIndex((obj => obj.subject == subject));
+                    let cartItem = this.cart.findIndex((obj => obj.subject == subject));
+
+                    if(operation == "+"){
+
+                        //decrease stock   
+                        this.items[result].stock--; 
+
+                        //increment the quantity
+                        this.cart[cartItem].quantity++;
+
+                    }
+
+                    else if(operation == "-"){
+
+                        //decrease stock 
+                        this.items[result].stock++; 
+
+                        //increment the quantity
+                        this.cart[cartItem].quantity--;
+
+                    }
+                },
+            },
+            computed:{
+                cartCount(){
+                    return this.cart.filter(obj => obj.quantity > 0).length;
+                }
             }
         }).mount('#list')
     </script>

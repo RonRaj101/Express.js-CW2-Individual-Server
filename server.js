@@ -27,8 +27,8 @@ app.get('/', (req, res) => {
 });
 
 app.param('Lessons', function(req, res, next, collectionName) {
-req.collection = db.collection(collectionName);
-return next();
+    req.collection = db.collection(collectionName);
+    return next();
 });
 
 app.get('/:Lessons', (req, res,next) => {
@@ -43,6 +43,11 @@ app.get('/:Lessons', (req, res,next) => {
     });
    
     
+});
+
+//save a new order to the database
+app.post('/createOrder', (req, res, next) => {
+    console.log(req.body);
 });
 
 app.get('/user', (req, res) => {
