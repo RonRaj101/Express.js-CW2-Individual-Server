@@ -60,12 +60,24 @@ app.post('/createOrder', (req, res, next) => {
     const product_id = item._id;
     const quantity = item.quantity;
 
-    const createdOrder = collection.insertOne({   
+    const createdOrder = {   
         name: name, 
         phone: phone, 
         product_id:product_id,
         quantity:quantity
+    };
+
+    collection.insertOne(createdOrder, (err, result) => {
+        try {
+            res.send(result);
+        } 
+        catch (error) {
+            res.send(err);
+        }
+        
     });
+
+    
 
     res.json(createdOrder);
 
