@@ -182,10 +182,25 @@
                                 },
                                 body: JSON.stringify({name: this.name,phone: this.phone, product_id: product_id, quantity: quantity})
                             }
-                        ])
+                        ]).then(response => response.json())
+                        .then(data => {
+                            updateQuantity(product_id, quantity);
+                        });
                     }
                     });
                     
+                },
+
+                updateQuantity(id,quantity){
+                    fetch("https://lessons-cw2.herokuapp.com/updateLessonQuantity",[
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({id: id, quantity: total_stock - quantity })
+                            }
+                        ])
                 }
             },
             computed:{
