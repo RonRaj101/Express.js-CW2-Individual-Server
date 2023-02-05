@@ -52,23 +52,18 @@ app.post('/createOrder', async(req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Credentials", true);
 
-    console.log(req.body);
-    // const name = req.body.name;
-    // const phone = req.body.phone;   
-    // const items = req.body.cart;
+    let collection = db.collection('Orders');
+    const name = req.body.name;
+    const phone = req.body.phone;   
+    
+    const product_id = req.product_id;//item._id;
+    const quantity = req.quantity; //item.quantity;
 
-    // let collection = db.collection('Orders');
-    // const product_id = '63d6d17c9c9f8e53ce756281' //item._id;
-    // const quantity = 2; //item.quantity;
+    const newListing = { name: name, phone: phone, product_id:product_id, quantity:quantity };
 
-    // const newListing = { name: name, phone: phone, product_id:product_id, quantity:quantity };
-
-    // const result = await collection.insertOne(newListing);
-    // console.log(`New listing created with the following id: ${result.insertedId}`);
-    // res.redirect('/updateLessonQuantity?id'+product_id+'&quantity='+quantity);
-
-
-
+    const result = await collection.insertOne(newListing);
+    console.log(`New listing created with the following id: ${result.insertedId}`);
+    res.redirect('/updateLessonQuantity?id'+product_id+'&quantity='+quantity);
 
     //go to update lesson quantity route
 
