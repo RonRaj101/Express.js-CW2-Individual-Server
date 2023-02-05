@@ -52,18 +52,25 @@ app.post('/createOrder', async(req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Credentials", true);
 
-    const name = req.body.name;
-    const phone = req.body.phone;   
-    const items = req.body.cart;
+    console.log(req.body);
+    // const name = req.body.name;
+    // const phone = req.body.phone;   
+    // const items = req.body.cart;
 
-    let collection = db.collection('Orders');
-    const product_id = '63d6d17c9c9f8e53ce756281' //item._id;
-    const quantity = 2; //item.quantity;
+    // let collection = db.collection('Orders');
+    // const product_id = '63d6d17c9c9f8e53ce756281' //item._id;
+    // const quantity = 2; //item.quantity;
 
-    const newListing = { name: name, phone: phone, product_id:product_id, quantity:quantity };
+    // const newListing = { name: name, phone: phone, product_id:product_id, quantity:quantity };
 
-    const result = await collection.insertOne(newListing);
-    console.log(`New listing created with the following id: ${result.insertedId}`);
+    // const result = await collection.insertOne(newListing);
+    // console.log(`New listing created with the following id: ${result.insertedId}`);
+    // res.redirect('/updateLessonQuantity?id'+product_id+'&quantity='+quantity);
+
+
+
+
+    //go to update lesson quantity route
 
     // items.forEach(item => {
     //     const product_id = item._id;
@@ -82,6 +89,24 @@ app.post('/createOrder', async(req, res, next) => {
     //      res.json(results);
     //     });
     // });
+});
+
+//update lesson quantity
+app.put('/updateLessonQuantity', async(req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Credentials", true);
+
+    const id = req.body.id;
+    const quantity = req.body.quantity;
+
+    let collection = db.collection('Lessons');
+    const result = await collection.updateOne(
+        { _id: ObjectId(id) },
+        { $set: { total_stock: total_stock - quantity } }
+    );
+    console.log(`${result.matchedCount} document(s) matched the query criteria.`);
+    console.log(`${result.modifiedCount} document(s) was/were updated.`);
+    res.json(result);
 });
 
 app.get('/user', (req, res) => {

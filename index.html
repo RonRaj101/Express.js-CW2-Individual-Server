@@ -168,6 +168,11 @@
                         this.cart[cartItem].quantity--;
                     }
                 },
+                createOrder(){
+                    this.cart.forEach(element => {
+                        fetch("https://lessons-cw2.herokuapp.com/Lessons")
+                    });
+                }
             },
             computed:{
                 cartCount(){
