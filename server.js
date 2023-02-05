@@ -48,7 +48,7 @@ app.get('/:Lessons', (req, res,next) => {
 
 
 //save a new order to the database
-app.post('/createOrder', (req, res, next) => {
+app.post('/createOrder', async(req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Credentials", true);
 
@@ -60,23 +60,28 @@ app.post('/createOrder', (req, res, next) => {
     const product_id = item._id;
     const quantity = item.quantity;
 
-    items.forEach(item => {
-        const product_id = item._id;
-        const quantity = item.quantity;
-        collection.insertOne(
-        {   
-            name: name, 
-            phone: phone, 
-            product_id:product_id,
-            quantity:quantity
-         }, 
-         (err, results) => {
-        if (err) {
-            return next(err);
-        }
-         res.json(results);
-        });
-    });
+    const newListing = { name: name, phone: phone, product_id:product_id, quantity:quantity };
+
+    const result = await collection.insertOne(newListing);
+    console.log(`New listing created with the following id: ${result.insertedId}`);
+
+    // items.forEach(item => {
+    //     const product_id = item._id;
+    //     const quantity = item.quantity;
+    //     collection.insertOne(
+    //     {   
+    //         name: name, 
+    //         phone: phone, 
+    //         product_id:product_id,
+    //         quantity:quantity
+    //      }, 
+    //      (err, results) => {
+    //     if (err) {
+    //         return next(err);
+    //     }
+    //      res.json(results);
+    //     });
+    // });
 });
 
 app.get('/user', (req, res) => {
