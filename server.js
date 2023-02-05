@@ -60,44 +60,23 @@ app.post('/createOrder', (req, res, next) => {
     const product_id = item._id;
     const quantity = item.quantity;
 
-    const createdOrder = {   
-        name: name, 
-        phone: phone, 
-        product_id:product_id,
-        quantity:quantity
-    };
-
-    collection.insertOne(req.body, (err, result) => {
-        try {
-            res.send(createdOrder);
-        } 
-        catch (error) {
-            res.send(err);
+    items.forEach(item => {
+        const product_id = item._id;
+        const quantity = item.quantity;
+        collection.insertOne(
+        {   
+            name: name, 
+            phone: phone, 
+            product_id:product_id,
+            quantity:quantity
+         }, 
+         (err, results) => {
+        if (err) {
+            return next(err);
         }
-        
+         res.json(results);
+        });
     });
-
-    
-
-    res.json(createdOrder);
-
-    console.log(createdOrder);
-    
-    // items.forEach(item => {
-    //     const product_id = item._id;
-    //     const quantity = item.quantity;
-    //     collection.insertOne({   
-    //             name: name, 
-    //             phone: phone, 
-    //             product_id:product_id,
-    //             quantity:quantity
-    //         }, (err, results) => {
-    //         if (err) {
-    //             return next(err);
-    //         }
-    //         res.send(results.ops);
-    //     });
-    // });
 });
 
 app.get('/user', (req, res) => {
